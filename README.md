@@ -1,130 +1,169 @@
-#Reconhecimento de Gestos em ambientes escuros, para acionar alertas ou sinais.
+# 🖐️ Reconhecimento de Gestos em Ambientes Escuros, para Acionar Alertas ou Sinais
 
-#Problema a ser solucionado:
+## 📌 Problema a ser Solucionado
 
-Em ambientes escuros, câmeras comuns não captam formas ou silhuetas, fazendo com que movimentos passem despercebidos. 
-Sem luz suficiente, as câmeras não distinguem mudanças de cena e o cenário escuro, gerando “falsos negativos” 
-de invasão. Isso significa que alguém pode se mover livremente sem acionar alarmes ou ser gravado, pois o software de 
-vigilância não enxerga o contraste necessário. Mesmo câmeras com bateria continuam “cegas” no escuro absoluto. 
-Por isso, soluções que clareiam a imagem ou usam sensores que não dependem de luz são essenciais para detectar 
-movimentos e manter a segurança durante apagões.
+Em ambientes escuros, câmeras comuns não captam formas ou silhuetas, fazendo com que movimentos passem despercebidos.
+Sem luz suficiente, as câmeras não distinguem mudanças de cena e o cenário escuro, gerando “falsos negativos” de invasão.
+Isso significa que alguém pode se mover livremente sem acionar alarmes ou ser gravado, pois o software de vigilância não enxerga o contraste necessário.
+Mesmo câmeras com bateria continuam “cegas” no escuro absoluto.
 
-######################################
+Por isso, soluções que clareiam a imagem ou usam sensores que não dependem de luz são essenciais para detectar movimentos e manter a segurança durante apagões.
 
+---
 
-Este script em Python processa um vídeo gravado em ambiente escuro (`IMG_7227.MOV`),
-clareia cada frame, compara com o frame anterior para detectar movimento e desenha:
+## 🎥 Detecção de Movimento com Processamento de Vídeo
 
-* Retângulos verdes ao redor das áreas em movimento
-* Pontos amarelos em cada pixel do contorno
-* Mensagem de alerta em vermelho **“ALERTA : MOVIMENTO DETECTADO”** sobre o vídeo
+Este script em Python processa um vídeo gravado em ambiente escuro (`IMG_7227.MOV`), clareia cada frame, compara com o frame anterior para detectar movimento e desenha:
 
-Além disso, imprime no console tanto o JSON indicando se houve movimento:
+* ✅ Retângulos verdes ao redor das áreas em movimento
+* 🟡 Pontos amarelos em cada pixel do contorno
+* 🚨 Mensagem de alerta em vermelho **“ALERTA : MOVIMENTO DETECTADO”** sobre o vídeo
 
-json
+Além disso, imprime no console um JSON indicando se houve movimento:
+
+```json
 {"movimento": 1}  // movimento detectado
 {"movimento": 0}  // sem movimento
+```
 
+### 🛑 Mensagem de Alerta que Aparece na Tela
 
-Mensagem de alerta que aparece na tela:
-
+```
 ALERTA : MOVIMENTO DETECTADO
+```
 
+---
 
-#Bibliotecas Necessárias
+## 📦 Bibliotecas Necessárias
 
-opencv-python: Captura e processamento de vídeo/imagens
-numpy: Operações matriciais
+* `opencv-python`: Captura e processamento de vídeo/imagens
+* `numpy`: Operações matriciais
 
-#Como instalar
+### 🔧 Como Instalar
 
+```bash
 pip install opencv-python numpy
+```
 
-#Como usar
+---
 
-1. Coloque "main.py" e "IMG_7227.MOV" na mesma pasta.
+## ▶️ Como Usar
+
+1. Coloque `main.py` e `IMG_7227.MOV` na mesma pasta.
 2. Abra o terminal nessa pasta e execute:
-   "python main.py"
-   
-3. A janela "Sensor de Movimento no Escuro"
- abrirá mostrando o vídeo com marcas de movimento e, se houver detecção, 
- exibirá a mensagem de alerta em vermelho sobre o vídeo.
 
-#Como Parar
-Na janela de exibição, pressione a tecla "ESC".
-Alternativamente, feche o terminal onde o script está rodando.
+```bash
+python main.py
+```
 
-#Funcionalidades em Tópicos
+3. A janela **"Sensor de Movimento no Escuro"** abrirá mostrando o vídeo com marcas de movimento e, se houver detecção, exibirá a mensagem de alerta em vermelho sobre o vídeo.
 
-1. "Leitura e redimensionamento do vídeo"
+---
 
-   * Abre `IMG_7227.MOV` e redimensiona para 500×500 pixels.
+## ⏹️ Como Parar
 
-2. "Pré-processamento para “clarear” frames escuros"
+* Na janela de exibição, pressione a tecla `ESC`.
+* Alternativamente, feche o terminal onde o script está rodando.
 
-   *Ajusta brilho/contraste via
-     python
-     cv2.convertScaleAbs(frame, alpha=1.0, beta=150)
-     
-    *Converte para HSV e equaliza o canal V (valor) para reforçar contraste.
+---
 
-3. "Conversão para escala de cinza + blur"
+## ⚙️ Funcionalidades em Tópicos
 
-   *Transforma o frame em tons de cinza (`cv2.cvtColor(..., cv2.COLOR_BGR2GRAY)`).
-   *Aplica desfoque gaussiano (7×7) para reduzir ruídos.
+### 1. **Leitura e redimensionamento do vídeo**
 
-4. "Frame differencing"
+* Abre `IMG_7227.MOV` e redimensiona para 500×500 pixels.
 
-   *Calcula `absdiff(prev_gray, gray_blur)` para identificar mudanças entre frames consecutivos.
-   *Aplica `threshold(25)` e dilatação para isolar regiões de movimento.
+### 2. **Pré-processamento para “clarear” frames escuros**
 
-5. "Detecção de contornos"
+* Ajusta brilho/contraste via:
 
-   * Encontra contornos binários com `cv2.findContours` e filtra por área ≥ 1000 pixels.
-   * Desenha retângulos verdes (`cv2.rectangle`) ao redor de cada contorno relevante.
-   * Desenha pontos amarelos (`cv2.circle`) em todos os pixels do contorno.
+```python
+cv2.convertScaleAbs(frame, alpha=1.0, beta=150)
+```
 
-6. "Emissão de alerta"
+* Converte para HSV e equaliza o canal V (valor) para reforçar contraste.
 
-   * Se qualquer contorno grande for detectado, sobrepõe a mensagem 
-   "ALERTA : MOVIMENTO DETECTADO" em vermelho no topo do vídeo e imprime no console:
-     "ALERTA : MOVIMENTO DETECTADO"
-     
-   * Ainda no console, imprime o JSON:
-    {"movimento": 1}
+### 3. **Conversão para escala de cinza + blur**
 
-   * Se não há movimento significativo, apenas imprime:
-     {"movimento": 0}
+* Transforma o frame em tons de cinza com `cv2.cvtColor(..., cv2.COLOR_BGR2GRAY)`
+* Aplica desfoque gaussiano (7×7) para reduzir ruídos.
 
+### 4. **Frame differencing**
 
-7. **Loop até ESC**
+* Calcula `absdiff(prev_gray, gray_blur)` para identificar mudanças entre frames consecutivos.
+* Aplica `threshold(25)` e dilatação para isolar regiões de movimento.
 
-   * Atualiza "prev_gray" para o próximo ciclo e continua processando até o usuário pressionar **ESC**.
+### 5. **Detecção de contornos**
 
-#Estrutura dos Arquivos
+* Encontra contornos binários com `cv2.findContours` e filtra por área ≥ 1000 pixels.
+* Desenha retângulos verdes (`cv2.rectangle`) ao redor de cada contorno relevante.
+* Desenha pontos amarelos (`cv2.circle`) em todos os pixels do contorno.
 
+### 6. **Emissão de alerta**
+
+* Se qualquer contorno grande for detectado, sobrepõe a mensagem:
+  **"ALERTA : MOVIMENTO DETECTADO"** em vermelho no topo do vídeo
+  e imprime no console:
+
+```
+ALERTA : MOVIMENTO DETECTADO
+```
+
+* Ainda no console, imprime o JSON:
+
+```json
+{"movimento": 1}
+```
+
+* Se não há movimento significativo, apenas imprime:
+
+```json
+{"movimento": 0}
+```
+
+### 7. **Loop até ESC**
+
+* Atualiza `prev_gray` para o próximo ciclo e continua processando até o usuário pressionar **ESC**.
+
+---
+
+## 📁 Estrutura dos Arquivos
+
+```
 GS-IOT/
 ├── main.py           # Código
 └── IMG_7227.MOV      # Vídeo em ambiente escuro
+```
 
-#Considerações Finais
+---
 
-Ajuste **BRIGHT\_BETA** (brilho) para 120, 180 ou 200, caso o vídeo esteja muito ou pouco escuro.
-Modifique **MIN\_CONTOUR\_AREA** para calibrar sensibilidade a ruídos ou movimentos pequenos.
+## 📝 Considerações Finais
 
-Se o OpenCV não abrir ".MOV", converta para ".mp4":
+* Ajuste **`BRIGHT_BETA`** (brilho) para 120, 180 ou 200, caso o vídeo esteja muito ou pouco escuro.
+* Modifique **`MIN_CONTOUR_AREA`** para calibrar sensibilidade a ruídos ou movimentos pequenos.
+
+### 🛠️ Problema com formato `.MOV`?
+
+Se o OpenCV não abrir `.MOV`, converta para `.mp4` com:
+
+```bash
 ffmpeg -i IMG_7227.MOV -c:v libx264 IMG_7227.mp4
-Depois, altere em "main.py":
+```
+
+Depois, altere em `main.py`:
+
+```python
 video_path = "IMG_7227.mp4"
+```
 
-A janela exibirá tanto a detecção visual (retângulos, pontos e mensagem de alerta) 
-quanto o console exibirá o JSON e a string de alerta correspondente.
+A janela exibirá tanto a detecção visual (retângulos, pontos e mensagem de alerta) quanto o console exibirá o JSON e a string de alerta correspondente.
 
+---
 
-Autores:
-Rui Amorim Siqueira - RM98436
-Luan Silveira Macea- RM98290
-Davi Passanha de Sousa Guerra - RM551605
+## 👨‍💻 Autores
 
+* Rui Amorim Siqueira - RM98436
+* Luan Silveira Macea - RM98290
+* Davi Passanha de Sousa Guerra - RM551605
 
-
+---
