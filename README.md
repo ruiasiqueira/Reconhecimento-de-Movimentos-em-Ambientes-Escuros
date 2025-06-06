@@ -49,7 +49,7 @@ pip install opencv-python numpy
 
 ## ▶️ Como Usar
 
-1. Coloque `main.py` e `IMG_7227.MOV` na mesma pasta.
+1. Coloque `main.py` e `video.mp4` na mesma pasta.
 2. Abra o terminal nessa pasta e execute:
 
 ```bash
@@ -71,7 +71,7 @@ python main.py
 
 ### 1. **Leitura e redimensionamento do vídeo**
 
-* Abre `IMG_7227.MOV` e redimensiona para 500×500 pixels.
+* Abre `video.mp4` e redimensiona para 500×500 pixels.
 
 ### 2. **Pré-processamento para “clarear” frames escuros**
 

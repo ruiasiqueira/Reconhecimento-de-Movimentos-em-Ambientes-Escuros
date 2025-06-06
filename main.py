@@ -2,11 +2,11 @@ import cv2
 import json  
 import numpy as np
 
-video_path = "IMG_7227.MOV"
+video_path = "video.mp4"
 cap = cv2.VideoCapture(video_path)
 
 if not cap.isOpened():
-    print("ERRO: Não foi possível abrir IMG_7227.MOV")
+    print("ERRO: Não foi possível abrir video.mp4")
     exit()
 
 BRIGHT_ALPHA = 1.0
