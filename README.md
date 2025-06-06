@@ -50,6 +50,7 @@ pip install opencv-python numpy
 ## ▶️ Como Usar
 
 1. Coloque `main.py` e `video.mp4` na mesma pasta.
+(Escolha o vídeo que quer realizar a detecção "video.mp4" ou "video2.mp4")
 2. Abra o terminal nessa pasta e execute:
 
 ```bash
